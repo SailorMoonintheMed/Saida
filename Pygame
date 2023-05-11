@@ -1,0 +1,158 @@
+import pygame
+
+# Инициализация Pygame
+pygame.init()
+
+# Определение цветов
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+
+# Определение размеров окна
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+
+# Создание окна игры
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Танки на двоих")
+
+clock = pygame.time.Clock()
+
+class Tank(pygame.sprite.Sprite):
+    def __init__(self, x, y, controls):
+        super().__init__()
+        self.image = pygame.Surface([30, 30])
+        self.image.fill(BLACK)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.controls = controls
+        self.health = 100
+
+    def update(self):
+        keys = pygame.key.get_pressed()
+        if keys[self.controls[0]]:
+            self.rect.x -= 5
+        elif keys[self.controls[1]]:
+            self.rect.x += 5
+        elif keys[self.controls[2]]:
+            self.rect.y += 5
+        elif keys[self.controls[3]]:
+            self.rect.y -= 5
+
+    def shoot(self):
+        # Реализация логики стрельбы
+        pass
+
+player1 = Tank(100, 100, [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_DOWN, pygame.K_UP])
+player2 = Tank(700, 500, [pygame.K_a, pygame.K_d, pygame.K_s, pygame.K_w])
+
+all_sprites = pygame.sprite.Group()
+all_sprites.add(player1)
+all_sprites.add(player2)
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    all_sprites.update()
+
+    screen.fill(WHITE)
+    all_sprites.draw(screen)
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
+import pygame
+import random
+
+# Инициализация Pygame
+pygame.init()
+
+# Окно игры
+win_width = 800
+win_height = 600
+win = pygame.display.set_mode((win_width, win_height))
+pygame.display.set_caption("Танки на двоих")
+
+# Загрузка звуков
+shoot_sound = pygame.mixer.Sound("tank-assets/Sounds/shoot.wav")
+explosion_sound = pygame.mixer.Sound("tank-assets/Sounds/explosion.wav")
+pygame.mixer.music.load("tank-assets/Sounds/background_music.mp3")
+pygame.mixer.music.play(-1)
+
+# Классы игроков
+class Tank:
+    def __init__(self, x, y, controls, color):
+        self.x = x
+        self.y = y
+        self.controls = controls
+        self.color = color
+        self.width = 40
+        self.height = 40
+        self.vel = 5
+        self.health = 3
+        self.bullets = []
+    
+    def draw(self, win):
+        pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height))
+        for bullet in self.bullets:
+            bullet.draw(win)
+    
+    def move(self):
+        keys = pygame.key.get_pressed()
+        if keys[self.controls["left"]]:
+            self.x -= self.vel
+        if keys[self.controls["right"]]:
+            self.x += self.vel
+        if keys[self.controls["up"]]:
+            self.y -= self.vel
+        if keys[self.controls["down"]]:
+            self.y += self.vel
+    
+    def shoot(self):
+        if len(self.bullets) < 3:
+            self.bullets.append(Bullet(self.x + self.width/2, self.y + self.height/2, self.color))
+            shoot_sound.play()
+    
+    def hit(self):
+        self.health -= 1
+        explosion_sound.play()
+    
+    def is_dead(self):
+        return self.health <= 0
+
+class Bullet:
+    def __init__(self, x, y, color):
+        self.x = x
+        self.y = y
+        self.color = color
+        self.radius = 5
+        self.vel = 10
+    
+    def draw(self, win):
+        pygame.draw.circle(win, self.color, (self.x, self.y), self.radius)
+    
+    def move(self):
+        self.y -= self.vel
+    
+    def hits_tank(self, tank):
+        return self.x - self.radius < tank.x + tank.width and self.x + self.radius > tank.x and self.y - self.radius < tank.y + tank.height and self.y + self.radius > tank.y
+
+# Класс для карты
+class Map:
+    def __init__(self, obstacles):
+        self.obstacles = obstacles
+    
+    def draw(self, win):
+        for obstacle in self.obstacles:
+            pygame.draw.rect(win, (255, 0, 0), obstacle)
+
+# Создание объектов
+tank1 = Tank(100, 100, {"left": pygame.K_LEFT, "right": pygame.K_RIGHT, "up": pygame.K_UP,
+
+
+
+
+Regenerate response
